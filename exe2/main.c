@@ -16,7 +16,6 @@ const int TRIG_PIN = 13;
 volatile bool echo_got = false;
 volatile int start_us;
 volatile int end_us = 0;
-volatile alarm_id_t alarm;
 
 int64_t alarm_callback(alarm_id_t id, void *user_data) {
     fired = true;
@@ -31,7 +30,6 @@ void gpio_callback(uint gpio, uint32_t events){
         }
         else if (events & GPIO_IRQ_EDGE_FALL) {
             end_us = get_absolute_time();
-            cancel_alarm(alarm);
 
         }
     }
@@ -56,7 +54,7 @@ int main() {
 
     while(1){
         while(true){
-            alarm = add_alarm_in_ms(5000, alarm_callback, NULL, false);    
+            alarm_id_t alarm = add_alarm_in_ms(5000, alarm_callback, NULL, false);    
             send_trig_pulse();
             if (fired) {
                 fired = 0;
@@ -68,6 +66,8 @@ int main() {
                     int distancia = (int)((delta_t * 0.0343) / 2.0);
                     printf("Sensor 1 - dist: %d cm\n",distancia);
                     echo_got = false;
+                    cancel_alarm(alarm);
+
             }
 
      }
