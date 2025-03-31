@@ -50,7 +50,7 @@ int main() {
 
     gpio_init(TRIG_PIN);
     gpio_set_dir(TRIG_PIN, GPIO_OUT);
-    sleep_us(80);
+    sleep_us(100);
 
     while(1){
         while(true){
